@@ -72,7 +72,7 @@ const gainedWorkoutMedia = (prev, next) => {
   return workoutMediaHashes(next).some(h => !had.has(h))
 }
 export const DEF = {
-  unit: 'kg', restSec: 90, restPauseSec: 15, sound: true, soundOnSilent: false, timerFlash: false, timedSetOvertime: false, keepAwake: true, lang: 'en',
+  unit: 'kg', restSec: 90, restPauseSec: 15, sound: true, soundOnSilent: false, timerFlash: false, timedSetOvertime: false, keepAwake: true, lang: 'pt-BR',
   theme: 'dark', accent: 'lime', body: 'male', targetW: null,
   bodyweight: [], routines: [], week: {}, dayPlan: {},
   exWeights: {}, workouts: [], active: null, customEx: [], gifSize: 'full',
@@ -189,7 +189,7 @@ const detectedLang = () => {
     const base = (navigator.language || '').toLowerCase().split('-')[0]
     if (RTL_LANGS.has(base)) return base
   } catch (e) { /* ignore */ }
-  return 'en'
+  return 'pt-BR'   // Center Gym: começa em português
 }
 
 // A copy started from nothing on this device. `langAuto` marks its language as one nobody has

@@ -33,8 +33,7 @@ export function matchLocale(tag) {
 export function autoLang(S, config, navLangs = []) {
   if (!S || S.langAuto !== true) return null
   return matchLocale(config?.default_lang)
-    || (navLangs || []).map(matchLocale).find(Boolean)
-    || 'en'
+    || 'pt-BR'   // Center Gym: português por padrão, mesmo com o navegador em outro idioma
 }
 
 // The instance's DEFAULT_LANG as last seen on this device, so a boot does not show the browser's

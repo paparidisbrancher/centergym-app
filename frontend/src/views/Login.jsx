@@ -76,8 +76,10 @@ export default function Login() {
     catch (e) { if (e.name !== 'NotAllowedError' && e.name !== 'AbortError') useUI.getState().toast(e.message || t('Sign-in failed')) }
   }
   const head = <>
-    <div style={{ fontSize: 54, display: 'flex', justifyContent: 'center', color: 'var(--acc)' }}><Icon name="dumbbell" /></div>
-    <h1 style={{ fontSize: 34, fontWeight: 700, letterSpacing: '-.028em', margin: '10px 0 4px' }}>openGym</h1>
+    {/* Center Gym: logo preto num cartão branco, legível no tema claro e no escuro. */}
+    <h1 style={{ margin: '0 0 14px' }}>
+      <img src="logo.png" alt="Center Gym" style={{ display: 'block', width: '100%', maxWidth: 340, margin: '0 auto', background: '#fff', borderRadius: 18, padding: '18px 22px', boxSizing: 'border-box' }} />
+    </h1>
   </>
   const wrap = { display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '78vh', textAlign: 'center' }
 
@@ -85,13 +87,13 @@ export default function Login() {
   if (DEMO) return (
     <div className="narrow" style={wrap}>
       {head}
-      <div className="muted" style={{ marginBottom: 30 }}>{t('Live demo — everything stays in this browser.')}</div>
-      <Button variant="primary" icon="sparkles" onClick={() => setGuest(true)}>{t('Start the demo')}</Button>
+      <div className="muted" style={{ marginBottom: 30 }}>Seu treino, sua evolução — direto no celular.</div>
+      <Button variant="primary" icon="sparkles" onClick={() => setGuest(true)}>Conhecer o app</Button>
       <div className="card small muted" style={{ textAlign: 'start', marginTop: 16 }}>
-        {t('This demo runs entirely in your browser on example data — nothing is sent anywhere. Passkey sign-in and sync across your devices come with the openGym server, which you get by self-hosting it.')}
+        Versão de demonstração com dados de exemplo: fichas de treino, treino guiado com timer de descanso, gráficos de evolução e peso corporal. Tudo fica só neste navegador.
       </div>
       <div className="dim small" style={{ marginTop: 22, lineHeight: 1.6 }}>
-        <a href={REPO} target="_blank" rel="noopener">{t('Self-host it in a minute →')}</a>
+        Baseado no <a href={REPO} target="_blank" rel="noopener">openGym</a> (código aberto, AGPL-3.0)
       </div>
     </div>
   )
