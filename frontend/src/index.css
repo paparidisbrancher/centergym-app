@@ -1723,3 +1723,9 @@ body.chips-dragging *{cursor:inherit}
 [dir="rtl"] .hm-wrap,[dir="rtl"] .cal-grid{direction:ltr}
 /* Tight tracking is tuned for Latin; Arabic is a connected script and gets none. */
 [dir="rtl"] *{letter-spacing:0}
+
+/* Gym identity: the supplied white logo keeps its own dark background in both themes. */
+.gym-brand { display:block; width:100%; max-width:360px; height:auto; margin:0 auto;
+  background:var(--brand-logo-bg, #141412); border-radius:12px; padding:12px 16px; object-fit:contain; }
+.gym-brand-compact { width:220px; max-width:100%; margin:0 0 6px; padding:8px 12px; border-radius:8px; }
+.gym-greeting { margin-top:10px; }

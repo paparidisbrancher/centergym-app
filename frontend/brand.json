@@ -1,0 +1,26 @@
+{
+  "id": "centergym",
+  "name": "Center Gym",
+  "shortName": "Center Gym",
+  "description": "Seu treino na Center Gym",
+  "logo": "logo.png",
+  "logoBackground": "#141412",
+  "icon": "icon-180.png",
+  "largeIcon": "icon-512.png",
+  "themes": {
+    "dark": {
+      "background": "#141412",
+      "surface": "#20201e",
+      "accent": "#ffffff",
+      "accentSecondary": "#d4d4d0",
+      "onAccent": "#141412"
+    },
+    "light": {
+      "background": "#f4f4f1",
+      "surface": "#ffffff",
+      "accent": "#141412",
+      "accentSecondary": "#363632",
+      "onAccent": "#ffffff"
+    }
+  }
+}

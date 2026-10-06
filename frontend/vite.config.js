@@ -3,6 +3,29 @@ import { createHash } from 'node:crypto'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+const brand = JSON.parse(readFileSync(new URL('./brand.json', import.meta.url), 'utf8'))
+const escapeHtml = value => value.replaceAll('&', '&amp;').replaceAll('\"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+const gymBrand = {
+  name: 'gym-brand',
+  transformIndexHtml(html) {
+    return html.replace(/<title>.*?<\/title>/, `<title>${escapeHtml(brand.name)}</title>`)
+      .replace(/(<meta name="description" content=")[^"]*/, `$1${escapeHtml(brand.description)}`)
+      .replace(/(<meta name="apple-mobile-web-app-title" content=")[^"]*/, `$1${escapeHtml(brand.shortName)}`)
+      .replace(/(<meta name="theme-color" content=")[^"]*/, `$1${brand.themes.dark.background}`)
+      .replaceAll('icon-180.png', brand.icon)
+  },
+  closeBundle() {
+    const file = new URL('./dist/manifest.json', import.meta.url)
+    if (!existsSync(file)) return
+    const manifest = JSON.parse(readFileSync(file, 'utf8'))
+    Object.assign(manifest, { name: brand.name, short_name: brand.shortName, description: brand.description,
+      background_color: brand.themes.dark.background, theme_color: brand.themes.dark.background,
+      icons: [ { src: brand.icon, sizes: '180x180', type: 'image/png', purpose: 'any' },
+        { src: brand.largeIcon, sizes: '512x512', type: 'image/png', purpose: 'any maskable' } ] })
+    writeFileSync(file, JSON.stringify(manifest, null, 2))
+  }
+}
+
 const backend = process.env.API_TARGET || 'http://127.0.0.1:3000'
 // The API refuses a state-changing request that a browser sent from anywhere other than its own
 // ORIGIN (the CSRF guard in api/server.js). The dev server is on a different port, so the page's
@@ -60,7 +83,7 @@ const appVersion = process.env.APP_BUILD ? `${pkgVersion}+${process.env.APP_BUIL
 
 export default defineConfig({
   define: { __APP_VERSION__: JSON.stringify(appVersion) },
-  plugins: [react(), umami, swStamp],
+  plugins: [react(), umami, gymBrand, swStamp],
   base: './',
   server: {
     // The Coach's core (payload, validator, prompts, HTTP adapters) lives in ../api/coach/core

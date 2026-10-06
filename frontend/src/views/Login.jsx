@@ -1,3 +1,4 @@
+import GymBrand from '../components/GymBrand.jsx'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
 import { webauthnOK, passkeyLogin, passkeyRegister, bio } from '../lib/api.js'
@@ -76,9 +77,8 @@ export default function Login() {
     catch (e) { if (e.name !== 'NotAllowedError' && e.name !== 'AbortError') useUI.getState().toast(e.message || t('Sign-in failed')) }
   }
   const head = <>
-    {/* Center Gym: logo preto num cartão branco, legível no tema claro e no escuro. */}
     <h1 style={{ margin: '0 0 14px' }}>
-      <img src="logo.png" alt="Center Gym" style={{ display: 'block', width: '100%', maxWidth: 340, margin: '0 auto', background: '#fff', borderRadius: 18, padding: '18px 22px', boxSizing: 'border-box' }} />
+      <GymBrand />
     </h1>
   </>
   const wrap = { display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '78vh', textAlign: 'center' }
