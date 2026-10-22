@@ -1,5 +1,11 @@
 # Third-party notices
 
+> **Modified work (2026-10-06).** This repository is Center Gym, a branded deployment of
+> openGym. The notices below are kept intact from upstream, including the MIT license texts
+> that must travel with the code. Center Gym's modifications (gym identity in
+> `frontend/brand.json` and deployment docs) are licensed under the GNU AGPL v3.0 or later,
+> the same license as openGym. See [LICENSE](LICENSE) and [README](README.md).
+
 openGym — Copyright (C) 2026 Duarte Santos.
 openGym's own code is licensed under the **GNU AGPL v3.0** (see [LICENSE](LICENSE)).
 

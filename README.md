@@ -1,338 +1,199 @@
 <div align="center">
 
-<img src="assets/banner.png" alt="openGym" width="720">
+<img src="frontend/public/logo.png" alt="Center Gym" width="280">
 
-**A self-hosted gym and body-weight tracker you actually own.**
+**O treino da Center Gym, no servidor da própria academia.**
 
-Plan your week, run guided workouts, log every set and your body weight —<br>
-on your phone, synced across your devices, behind your own passkey login.
+Planeje a semana, conduza o treino e registre cada série e o peso corporal —
+no celular, sincronizado entre aparelhos, com login por passkey.
 
-[![Discord](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2Fe62jY6fwVb%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&suffix=%20members&label=Discord&logo=discord&logoColor=white&color=5865F2&style=for-the-badge)](https://discord.gg/e62jY6fwVb)
-[![Online](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2Fe62jY6fwVb%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&suffix=%20online&label=&logo=discord&logoColor=white&color=3BA55C&style=for-the-badge)](https://discord.gg/e62jY6fwVb)
-[![GitHub stars](https://img.shields.io/github/stars/DuarteSantos8/openGym?style=for-the-badge&logo=github&logoColor=white&color=24292f)](https://github.com/DuarteSantos8/openGym/stargazers)
-
-[![Release](https://img.shields.io/github/v/release/DuarteSantos8/openGym?style=flat-square)](https://github.com/DuarteSantos8/openGym/releases)
-[![Tests](https://img.shields.io/github/actions/workflow/status/DuarteSantos8/openGym/test.yml?branch=main&label=tests&style=flat-square)](https://github.com/DuarteSantos8/openGym/actions/workflows/test.yml)
-[![Pipeline](https://gitlab.com/DuarteSantos8/opengym/badges/main/pipeline.svg?style=flat-square)](https://gitlab.com/DuarteSantos8/opengym/-/pipelines)
-[![Coverage](https://gitlab.com/DuarteSantos8/opengym/badges/main/coverage.svg?job=test:frontend&style=flat-square)](https://gitlab.com/DuarteSantos8/opengym/-/pipelines?ref=main)
-[![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-a3e635?style=flat-square)](LICENSE)
-
-[Website](https://opengym.duarte-santos.ch) ·
-[Live demo](https://opengym.duarte-santos.ch/demo/) ·
-[Android APK](https://github.com/DuarteSantos8/openGym/releases/latest) ·
-[Self-hosting guide](docs/SELF_HOSTING.md) ·
-[Roadmap](ROADMAP.md) ·
-[Changelog](CHANGELOG.md)
+[Prévia](https://paparidisbrancher.github.io/centergym-app/) ·
+[Self-hosting](docs/SELF_HOSTING.md) ·
+[Identidade](docs/GYM_BRANDING.md) ·
+[Licença AGPL-3.0](LICENSE) ·
+[NOTICE](NOTICE.md)
 
 </div>
 
+> **Obra modificada (6 de outubro de 2026) / Modified work (2026-10-06).**
+> Center Gym é uma implantação com marca própria do [openGym](https://github.com/DuarteSantos8/openGym), de Duarte Santos (Copyright © 2026 Duarte Santos). O código desta cópia continua sob a [GNU AGPL v3.0 ou posterior](LICENSE), a mesma licença do original, inclusive a permissão adicional da seção 7 descrita em [NOTICE.md](NOTICE.md). Este repositório não é o projeto upstream: o site, a demo, o Discord, os badges de estrelas e as imagens publicadas em nome do openGym pertencem ao autor original.
+
+## O que é
+
+A Center Gym usa este aplicativo para o aluno planejar a semana, treinar com guia e acompanhar carga, repetições e peso corporal. Os dados ficam numa pasta do servidor da implantação — sem conta em serviço de terceiro, sem assinatura e sem telemetria no build padrão.
+
+A marca (nome, logo, ícones e paleta preto e branco) fica isolada em [`frontend/brand.json`](frontend/brand.json). Login, início, configurações, título do navegador e o manifesto do app instalado leem esse arquivo. O restante do código segue o openGym, para que correções do upstream possam entrar sem misturar a identidade da academia. O passo a passo dessa separação está em [docs/GYM_BRANDING.md](docs/GYM_BRANDING.md).
+
 <table align="center">
 <tr>
-<td align="center"><img src="assets/screenshots/home.png" alt="Home screen" width="230"><br><sub><b>Home</b> · today's workout and weight</sub></td>
-<td align="center"><img src="assets/screenshots/workout.png" alt="Workout screen" width="230"><br><sub><b>Guided workout</b> · demos and sets</sub></td>
-<td align="center"><img src="assets/screenshots/stats.png" alt="Stats screen" width="230"><br><sub><b>Stats</b> · heatmap, charts and PRs</sub></td>
+<td align="center"><img src="assets/screenshots/home.png" alt="Tela inicial do aplicativo" width="230"><br><sub><b>Início</b> · treino do dia e peso</sub></td>
+<td align="center"><img src="assets/screenshots/workout.png" alt="Tela de treino guiado" width="230"><br><sub><b>Treino</b> · demonstração e séries</sub></td>
+<td align="center"><img src="assets/screenshots/stats.png" alt="Tela de estatísticas" width="230"><br><sub><b>Estatísticas</b> · mapa, gráficos e recordes</sub></td>
 </tr>
 </table>
 
-## Why openGym
+<p align="center"><sub>As capturas mostram o fluxo herdado do openGym. Nesta implantação a logo e as cores vêm de <code>frontend/brand.json</code> (preto e branco), não do verde do projeto original.</sub></p>
 
-Most workout apps keep your data on their servers, push you towards a subscription, or vanish
-when the company does. openGym runs on your own box, keeps your data in a folder you control, and
-is yours to fork. It still behaves like a modern app: installable on the home screen, passkey
-sign-in, works offline, syncs between your phone and your laptop.
+## Prévia
 
-No account on someone else's server, no subscription, no ads, no telemetry. One
-`docker compose up` and it's running.
+<https://paparidisbrancher.github.io/centergym-app/> é a prévia **deste** repositório, publicada pelo GitHub Pages (`.github/workflows/pages.yml`) com `VITE_DEMO=1`. O aplicativo abre em modo convidado, com um histórico de exemplo, e as imagens dos exercícios vêm do conjunto de dados upstream. Não é o servidor da academia e não é a demonstração do autor do openGym.
 
-The [in-browser demo](https://opengym.duarte-santos.ch/demo/) is the real app with example data,
-if you want to try it before installing anything.
+## Subir uma instância
 
-## Features
-
-**Planning**
-
-- A routine per weekday over a library of **1,324 exercises** with animated demos, searchable and
-  browsable by muscle on a body map. Filter by the equipment you own.
-- Four starter plans (Push/Pull/Legs, Upper/Lower, Full Body, 5×5) that load as ordinary,
-  editable routines.
-- Move a session to another day without touching the weekly plan. The week starts on Monday or
-  Sunday, your choice.
-- Supersets, warm-up sets, drop sets and rest-pause, timed exercises (planks, hangs, carries),
-  cardio by time and speed, rest time per exercise, planned deloads.
-- Your own exercises, with your own photo, GIF or short video. Location data is stripped on the
-  device before upload.
-
-**Training**
-
-- Guided sessions: today's workout starts itself, weights are pre-filled from last time, a rest
-  timer runs between sets, PRs are detected as you go. On a rest day it tells you when the next
-  session is.
-- A quiet workout screen: one menu per exercise, the set number as the set's own menu, card or
-  list view. Switches in Settings bring the old button rows back if you liked them.
-- Optional effort column as RIR or RPE, colour-coded, with a plain-language line per level.
-- Plate math for barbell, EZ bar, trap bar and Smith machine, worked out from the plates you own.
-- Bodyweight exercises know they carry no load: log reps, add a dip belt if you use one.
-- Per-side reps for lunges and single-arm work, the screen stays awake while you train, and a
-  rest-timer alert can flash the screen for loud gyms.
-
-**Progress**
-
-- Progression rules per routine or per exercise: linear, Greyskull LP, double progression through a
-  visible rep range, or adding time. Each target explains why it is that number; missed reps never
-  add load, stalls trigger a deload.
-- Estimated 1RM per exercise with its own curve, Structural Balance ratios (Poliquin, Thibaudeau,
-  ATG), a year-long activity heatmap.
-- A muscle map in three modes: where your volume went, what is still recovering, and what has gone
-  untrained.
-- Body-weight chart against a goal line.
-- Edit any saved workout after the fact, log one you did on paper, or move it to the right date.
-  Records are re-read from the corrected history.
-
-**Accounts and data**
-
-- Passkeys (Face ID, Touch ID, fingerprint) with per-profile data synced across devices. Password
-  sign-in can be switched on per instance; new devices pair with a one-time code or QR.
-- Two devices editing at once merge instead of overwriting each other (see [sync](#how-sync-works)).
-- Import from FitNotes, Strong, Hevy (CSV or API key) and Apple Health weight exports. Export
-  everything as one JSON file whenever you like.
-- Share a plan as a small file or print it as a PDF.
-- Optional admin dashboard with invite-only signup and an activity log.
-- 17 languages, including right-to-left Arabic. Exercise names and instructions are translated
-  for most of them.
-
-**Optional extras, off by default**
-
-- An [AI coach](docs/AI_COACH.md) that drafts a week of routines and later suggests changes based on
-  what you logged. You approve every change. It runs on your server with your own provider key
-  (Anthropic, OpenAI, Gemini or any OpenAI-compatible endpoint, Ollama included).
-- An [MCP server](mcp/README.md) so an assistant like Claude Desktop can answer questions about your
-  training history. Read-only and local; not part of the Docker build.
-
-The full list of what changed release by release is in the [changelog](CHANGELOG.md).
-
-## Quick start
-
-You need [Docker](https://docs.docker.com/get-docker/) with Compose.
+É preciso [Docker](https://docs.docker.com/get-docker/) com Compose.
 
 ```bash
-git clone https://github.com/DuarteSantos8/openGym
-cd openGym
+git clone https://github.com/paparidisbrancher/centergym-app.git
+cd centergym-app
 cp .env.example .env
-docker compose pull      # prebuilt images, amd64 + arm64 (skip this to build from source)
-docker compose up -d
+docker compose up -d --build
 ```
 
-Open <http://localhost:8080>, tap **Create profile**, and you're in. The first start downloads
-the exercise media (about 140 MB) once.
+Abra <http://localhost:8080>. A primeira subida baixa a mídia dos exercícios (cerca de 140 MB) uma vez.
 
-To reach it from your phone with passkeys you need HTTPS on a domain; that's a two-line change in
-`.env`. The [self-hosting guide](docs/SELF_HOSTING.md) walks through Cloudflare Tunnel, Caddy,
-Traefik and nginx, and there are separate guides for
-[HTTPS on a LAN](docs/SELF_HOSTING_HTTPS.md) and [Kubernetes](docs/SELF_HOSTING_KUBERNETES.md).
+Use `--build`. As linhas `image:` do `docker-compose.yml` ainda apontam para as imagens upstream `ghcr.io/duartesantos8/opengym-{api,web}`. Um `docker compose pull` sobe o openGym sem a marca da Center Gym, porque nome, logo e paleta entram no frontend na hora do build.
 
-> [!NOTE]
-> Images are published from the same tag to `registry.gitlab.com/duartesantos8/opengym/{api,web}`
-> (what `docker-compose.yml` pulls) and `ghcr.io/duartesantos8/opengym-{api,web}`. Swap the
-> `image:` lines if you prefer GHCR, or run `docker compose up -d --build` to build locally. Either
-> way you don't need Node on the host.
+No `.env`, defina `RP_NAME=Center Gym` para o nome que o sistema mostra no prompt da passkey. `RP_ID` e `ORIGIN` precisam ser o hostname e a URL exatos da implantação; passkey exige HTTPS fora de localhost. O guia de [self-hosting](docs/SELF_HOSTING.md) cobre Cloudflare Tunnel, Caddy, Traefik e nginx, com guias separados para [HTTPS na rede local](docs/SELF_HOSTING_HTTPS.md) e [Kubernetes](docs/SELF_HOSTING_KUBERNETES.md).
 
 <details>
-<summary><b>Configuration reference</b> (all through <code>.env</code>)</summary>
+<summary><b>Variáveis de ambiente</b> (todas pelo <code>.env</code>)</summary>
 
-| Variable | What it does | Default |
+| Variável | Função | Padrão |
 |---|---|---|
-| `RP_ID` | Hostname passkeys are bound to | `localhost` |
-| `ORIGIN` | Full URL the app is served from | `http://localhost:8080` |
-| `WEB_PORT` | Host port for the web UI | `8080` |
-| `NGINX_PORT` | Port the web container listens on inside the container | `80` |
-| `BACKEND` | Name of the API service that `/api` is proxied to | `api` |
-| `PORT` | Port the API listens on; the web container proxies to the same value | `3000` |
-| `RP_NAME` | Name shown in the passkey prompt | `openGym` |
-| `SESSION_DAYS` | How long a sign-in lasts, in days | `90` |
-| `ADMIN_UIDS` | User ids that get the admin dashboard, comma-separated | *(none)* |
-| `INVITE_ONLY` | Require an invite code to create a profile | *(off)* |
-| `ALLOW_GUEST` | Offer "Continue without account"; `0` requires a profile | *(on)* |
-| `PASSWORD_LOGIN` | Offer name-and-password sign-in next to passkeys | *(off)* |
-| `TRUST_PROXY` | Let the sign-in throttle read the client address from proxy headers | `1` in `docker-compose.yml` |
-| `AUDIT_LOG` | Record sign-ins and admin actions; `0` records nothing | *(on)* |
-| `AUDIT_MAX` | Events kept in the activity log; `0` for no limit | `5000` |
-| `AUDIT_DAYS` | Days kept in the activity log; `0` keeps until `AUDIT_MAX` | `90` |
-| `AUDIT_IP` | Record the caller's address: `off`, `net` (network only) or `full` | `off` |
-| `VAPID_SUBJECT` | Contact URL sent with push notifications | your `ORIGIN` |
-| `API_TARGET` | API image to build: `default`, or `coach` with the Claude Agent SDK and Codex CLI | `default` |
-| `COACH_DISABLED` | `1` forces the AI coach off instance-wide | *(unset)* |
+| `RP_ID` | Hostname ao qual a passkey fica presa | `localhost` |
+| `ORIGIN` | URL completa em que o app é servido | `http://localhost:8080` |
+| `WEB_PORT` | Porta do host para a interface | `8080` |
+| `NGINX_PORT` | Porta em que o nginx escuta dentro do container | `80` |
+| `BACKEND` | Nome do serviço da API para o proxy de `/api` | `api` |
+| `PORT` | Porta da API; o container web usa o mesmo valor | `3000` |
+| `RP_NAME` | Nome no prompt da passkey. Nesta implantação: `Center Gym` | `openGym` no exemplo upstream |
+| `SESSION_DAYS` | Duração do login, em dias | `90` |
+| `ADMIN_UIDS` | Ids com acesso ao painel de administração, separados por vírgula | *(nenhum)* |
+| `INVITE_ONLY` | Exigir código de convite para criar perfil | *(desligado)* |
+| `ALLOW_GUEST` | Oferecer continuar sem conta; `0` exige perfil | *(ligado)* |
+| `PASSWORD_LOGIN` | Oferecer nome e senha além da passkey | *(desligado)* |
+| `TRUST_PROXY` | A limitação de login lê o endereço do cliente nos cabeçalhos do proxy | `1` no `docker-compose.yml` |
+| `AUDIT_LOG` | Registrar logins e ações de admin; `0` não registra | *(ligado)* |
+| `AUDIT_MAX` | Eventos mantidos no log; `0` sem limite | `5000` |
+| `AUDIT_DAYS` | Dias mantidos no log; `0` vale até `AUDIT_MAX` | `90` |
+| `AUDIT_IP` | Gravar o endereço de quem chama: `off`, `net` ou `full` | `off` |
+| `VAPID_SUBJECT` | URL de contato enviada com as notificações push | o `ORIGIN` |
+| `API_TARGET` | Alvo da imagem da API: `default`, ou `coach` com o SDK do coach | `default` |
+| `COACH_DISABLED` | `1` desliga o coach de IA na instância inteira | *(não definido)* |
 
-Push-notification keys are generated on first run into `./data/vapid.json`. `DATA_DIR` is pinned to
-`/data` inside the container and mapped to `./data` on the host; change the volume, not the
-variable. The [self-hosting guide](docs/SELF_HOSTING.md) covers every option in detail.
+As chaves de push são geradas na primeira execução em `./data/vapid.json`. `DATA_DIR` fica fixo em `/data` dentro do container e mapeado para `./data` no host. O [guia de self-hosting](docs/SELF_HOSTING.md) detalha cada opção.
 
 </details>
 
-## Phone app
+## O que o aplicativo faz
 
-The same codebase builds a standalone app with Capacitor: no account, no server, everything stays
-on the phone, with native reminders and a rest countdown in the notification shade.
+**Planejamento**
 
-- **Android:** download the signed APK from the [latest release](https://github.com/DuarteSantos8/openGym/releases/latest)
-  or the [website](https://opengym.duarte-santos.ch). Each build sits next to its `.sha256`, and
-  the app checks for updates itself. openGym is deliberately not on the Play Store.
-- **iPhone:** Apple doesn't allow installs outside the App Store. Self-host and add the PWA to your
-  home screen from Safari, or build the native app onto your own device with Xcode.
+- Uma rotina por dia da semana, sobre uma biblioteca de **1.324 exercícios** com demonstração animada, busca e mapa muscular. Dá para filtrar pelo equipamento disponível.
+- Quatro planos iniciais (Push/Pull/Legs, Upper/Lower, Full Body, 5×5), editáveis como qualquer outra rotina.
+- Mover uma sessão de dia sem alterar o plano da semana. A semana começa na segunda ou no domingo.
+- Superséries, aquecimento, drop set, rest-pause, exercícios por tempo, cardio por tempo e velocidade, descanso por exercício e deload planejado.
+- Exercícios próprios, com foto, GIF ou vídeo curto. Dados de localização são removidos no aparelho antes do envio.
 
-Details and build instructions: [docs/MOBILE.md](docs/MOBILE.md).
+**Treino**
 
-## How it works
+- Sessão guiada: o treino do dia já vem preenchido com a carga da última vez, o descanso corre entre as séries e os recordes aparecem na hora.
+- Tela enxuta, com visão em cartões ou em lista. O esforço pode ser RIR ou RPE.
+- Cálculo de anilhas para barra, EZ, trap bar e Smith, a partir das anilhas disponíveis.
+- Exercícios de peso corporal registram repetições e, se houver, a carga da cinta.
+- Repetições por lado, tela acesa durante o treino e alerta visual do descanso.
 
-<p align="center">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture-dark.png">
-  <img src="docs/diagrams/architecture.png" alt="Architecture: the phone talks HTTPS to nginx (web), which serves the app and proxies /api to the Node api; the api stores JSON in ./data. A one-shot media service downloads exercise media on first start; the AI coach and MCP server are optional." width="520">
-</picture>
-</p>
+**Progresso**
 
-- **`frontend/`** is React 19 and Vite (React Router, Zustand), built to static files inside Docker.
-- **`api/`** is plain `node:http` with two dependencies: `@simplewebauthn/server` for passkeys and
-  `web-push` for notifications. Everything is stored as JSON under `./data`.
-- **`web/`** builds the frontend and serves it with nginx, proxying `/api` so the whole app sits on
-  one origin, which passkeys require.
+- Regras de progressão por rotina ou por exercício: linear, Greyskull LP, progressão dupla numa faixa de repetições, ou tempo. Repetição faltando não aumenta a carga; estagnação dispara deload.
+- 1RM estimado, equilíbrio estrutural, mapa de calor do ano e mapa muscular (volume, recuperação e o que ficou sem treino).
+- Gráfico de peso corporal com uma linha de meta.
+- Editar um treino já salvo, registrar um treino feito no papel ou corrigir a data. Os recordes são relidos do histórico corrigido.
 
-The training logic (progression rules, 1RM, how a logged session is read back) lives in pure
-functions under `frontend/src/lib/` with tests beside them. The HTTP API is documented as an
-OpenAPI spec in [`api/openapi.yaml`](api/openapi.yaml), browsable at
-[opengym.duarte-santos.ch/api.html](https://opengym.duarte-santos.ch/api.html).
+**Contas e dados**
 
-### How sync works
+- Passkey (Face ID, Touch ID, digital) e dados por perfil, sincronizados entre aparelhos. Senha pode ser ligada na instância. Um aparelho novo entra com código de uso único ou QR.
+- Duas edições ao mesmo tempo se combinam em vez de uma sobrescrever a outra.
+- Importação de FitNotes, Strong, Hevy (CSV ou chave de API) e peso do Apple Health. Exportação de tudo num JSON.
+- Compartilhar um plano ou imprimir em PDF.
+- Painel de administração opcional, cadastro só por convite e log de atividade.
+- 17 idiomas, inclusive árabe da direita para a esquerda. O padrão desta implantação é português do Brasil.
 
-Each profile's data is one document with a server revision. A device sends the revision it last
-saw along with its changes; if another device wrote in between, the server refuses and returns the
-current document so the device can merge and retry.
+**Extras, desligados por padrão**
 
-<p align="center">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/sync-dark.png">
-  <img src="docs/diagrams/sync.png" alt="Sync: a device saves with the revision it last saw; if another device wrote in between, the server answers 409 with the current document, the device merges and saves again." width="560">
-</picture>
-</p>
+- Um [coach de IA](docs/AI_COACH.md) que rascunha a semana e depois sugere mudanças com base no que foi registrado. Cada mudança precisa de aprovação. Roda no seu servidor, com a chave do provedor que você configurar.
+- Um [servidor MCP](mcp/README.md) para um assistente local ler o histórico de treino. Somente leitura; não entra na imagem Docker.
 
-Nothing that hasn't reached the server is discarded on disconnect or sign-out, and the app shows a
-banner whenever it's working offline.
+O histórico de versões do código herdado está no [changelog](CHANGELOG.md).
 
-### Your data
+## Celular
 
-Everything lives in `./data` on your host:
+O mesmo código gera um app com Capacitor: sem conta e sem servidor, os dados ficam no aparelho, com lembretes nativos.
 
-| File | Contents |
+Esta cópia **não** publica APK assinado nem usa a loja. O APK e o site `opengym.duarte-santos.ch` são do openGym upstream, com a marca original, e não devem ser distribuídos como Center Gym. Para um build próprio, siga [docs/MOBILE.md](docs/MOBILE.md). No iPhone, o caminho suportado sem loja é a PWA (Safari → Adicionar à Tela de Início) ou um build local no Xcode.
+
+## Como funciona
+
+- **`frontend/`** — React 19 e Vite (React Router, Zustand). A identidade da academia entra por `frontend/brand.json` no build.
+- **`api/`** — `node:http`, sem framework. Dependências de runtime: `@simplewebauthn/server` (passkey) e `web-push`. O estado é JSON em `./data`.
+- **`web/`** — constrói o frontend e serve com nginx, fazendo proxy de `/api` para uma única origem, que a passkey exige.
+
+A lógica de treino (progressão, 1RM, releitura da sessão) está em funções puras em `frontend/src/lib/`, com teste ao lado. A API HTTP está em [`api/openapi.yaml`](api/openapi.yaml).
+
+Cada perfil é um documento com revisão no servidor. O aparelho envia a revisão que viu; se outro aparelho gravou no meio, o servidor recusa, devolve o documento atual, e o aparelho combina e tenta de novo. O que ainda não chegou ao servidor não é apagado ao desconectar.
+
+| Arquivo em `./data` | Conteúdo |
 |---|---|
-| `db.json` | Profiles and public passkey data |
-| `state-<user>.json` | Each user's plan, workouts, body weight and settings |
-| `audit.log` | Admin activity log (no IP addresses unless you turn that on) |
-| `secret` | Session-cookie signing key |
+| `db.json` | Perfis e dados públicos de passkey |
+| `state-<usuário>.json` | Plano, treinos, peso corporal e ajustes |
+| `audit.log` | Log de administração (sem IP, a menos que você ligue) |
+| `secret` | Chave que assina o cookie de sessão |
 
-Back up `./data` and you've backed up everything. Passkey private keys never reach the server; they
-stay in your phone's secure hardware or your password manager.
+Copiar `./data` é o backup. A chave privada da passkey não vai para o servidor.
 
-## Documentation
+## Documentação
 
-The [documentation index](docs/README.md) sorts every guide by who it's for. The most used ones:
+O [índice](docs/README.md) separa os guias por leitor. Os mais usados:
 
-| I want to | Read |
+| Quero | Leia |
 |---|---|
-| Get a quick answer | [FAQ](docs/FAQ.md) |
-| Set up my own instance | [Self-hosting](docs/SELF_HOSTING.md) |
-| Use the Android or iPhone app | [Phone app](docs/MOBILE.md) |
-| Bring my history from another app | [Importing data](docs/DATA_IMPORTS.md) |
-| Turn on the AI coach | [AI coach](docs/AI_COACH.md) |
-| Contribute code | [Contributing](CONTRIBUTING.md) |
-| Report a security problem | [Security](SECURITY.md) |
+| Resposta curta | [FAQ](docs/FAQ.md) |
+| Subir esta instância | [Self-hosting](docs/SELF_HOSTING.md) |
+| Trocar nome, logo e cores | [Identidade](docs/GYM_BRANDING.md) |
+| App Android ou iPhone | [Celular](docs/MOBILE.md) |
+| Trazer histórico de outro app | [Importação](docs/DATA_IMPORTS.md) |
+| Ligar o coach de IA | [Coach](docs/AI_COACH.md) |
+| Reportar um problema de segurança do código herdado | [Security](SECURITY.md) |
 
-## Roadmap
+Problema de login nesta implantação é quase sempre `RP_ID` ou `ORIGIN` diferente do endereço real. O guia de self-hosting descreve o caso.
 
-A release roughly every two weeks, each small and themed. The full plan is in
-[ROADMAP.md](ROADMAP.md), and the issues sit in the
-[GitHub milestones](https://github.com/DuarteSantos8/openGym/milestones).
+## Créditos, licença e avisos
 
-| Release | Planned | Theme |
-|---|---|---|
-| v1.3.10 | Oct 2026 | Session queue and rotation |
-| v1.3.11 | Nov 2026 | Programmes and phases |
-| v1.3.12–13 | Nov–Dec 2026 | Progression engine: AMRAP, %1RM, 5/3/1 |
-| v1.3.14 | Dec 2026 | Cardio, exercise alternatives, groups |
-| v1.4.0 | Jan 2027 | Database storage (the one compatibility break) |
-| v1.4.1–3 | Jan–Feb 2027 | Search, OIDC login, trainer role |
-| v1.4.4–7 | Mar–Apr 2027 | iOS app, Health Connect, catalogue, skins |
+### Projeto original
 
-## Community
+O aplicativo é o openGym, escrito e mantido por Duarte Santos e por quem contribuiu naquele repositório:
 
-- **[Discord](https://discord.gg/e62jY6fwVb)** for release announcements, self-hosting help and
-  quick back-and-forth. Usually the fastest way to get an answer.
-- **[Discussions](https://github.com/DuarteSantos8/openGym/discussions)** for questions and ideas
-  you want the next person to find by searching.
-- **[Issues](https://github.com/DuarteSantos8/openGym/issues)** for reproducible bugs and agreed-on
-  work. Login trouble is almost always an `RP_ID`/`ORIGIN` mismatch; the
-  [self-hosting guide](docs/SELF_HOSTING.md) covers it.
-- **[Pull requests](https://github.com/DuarteSantos8/openGym/pulls)** are welcome; start with
-  [CONTRIBUTING.md](CONTRIBUTING.md).
+- Código e histórico: <https://github.com/DuarteSantos8/openGym>
+- Copyright do código original: © 2026 Duarte Santos
+- O upstream documenta o próprio processo de desenvolvimento em `CLAUDE.md` e no README original. Esse texto descreve o openGym, não uma equipe da Center Gym.
 
-<a href="https://github.com/DuarteSantos8/openGym/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=DuarteSantos8/openGym&max=60" alt="Contributors">
-</a>
+Canais do **autor original** (não são suporte desta academia): o site e a demo em <https://opengym.duarte-santos.ch>, o [Discord](https://discord.gg/e62jY6fwVb) e as [Discussions](https://github.com/DuarteSantos8/openGym/discussions). Issues desta implantação ficam em <https://github.com/paparidisbrancher/centergym-app/issues>.
 
-### Where the code lives
+Modificações nesta cópia, com data relevante de 6 de outubro de 2026: identidade Center Gym (`frontend/brand.json`, logo, ícones, paleta e textos de marca) e a documentação que distingue esta implantação do upstream. O restante acompanha o openGym.
 
-GitHub is the home of the project. [gitlab.com/DuarteSantos8/opengym](https://gitlab.com/DuarteSantos8/opengym)
-is a mirror, updated by a GitHub Actions workflow on every push to `main` and every release tag. It
-exists because its CI builds the release artifacts: the signed APK, the multi-arch images and the
-SBOMs. Nothing is merged there by hand. In the changelog, `!NN` refers to a GitLab merge request
-from the weeks in August and September 2026 when the project lived there.
+### Licença
 
-## How openGym is built
+O código do openGym e as modificações desta cópia estão sob a [GNU AGPL v3.0 ou posterior](LICENSE). Você pode hospedar, usar, modificar e compartilhar. Se oferecer uma versão modificada como serviço na rede, precisa disponibilizar o código-fonte correspondente sob a mesma licença.
 
-People have asked about this, so plainly: **openGym is developed with
-[Claude Code](https://claude.com/claude-code)**, Anthropic's coding agent. A large share of the
-code, tests and documentation is drafted in Claude Code sessions, and the repository carries a
-[`CLAUDE.md`](CLAUDE.md) with the project context those sessions start from.
+A permissão adicional da seção 7 (distribuição do app móvel por lojas cujo contrato seria incompatível com a AGPL, desde que o fonte continue disponível sob a AGPL) está reproduzida em [NOTICE.md](NOTICE.md). Ela vale para o canal de distribuição e não afrouxa o resto da licença.
 
-What that does and doesn't mean:
-
-- **A person decides and ships.** What goes in, what gets reviewed and merged, and every release
-  are the maintainer's call. Changes are tested on a staging instance and on real phones before
-  they are tagged.
-- **Tests hold the logic in place.** The training logic is covered by unit tests, and pull requests
-  run the frontend, API and MCP suites in CI. That is the guard against plausible-looking code
-  that is wrong, whoever or whatever wrote it.
-- **The app itself doesn't need an LLM.** Nothing in a default install calls an AI service. The AI
-  coach and the MCP server are opt-in, and the coach only talks to the provider you configure, with
-  your own key.
-
-Community pull requests are written by their authors, with whatever tools they like, and reviewed
-the same way.
-
-## Support
-
-openGym is free and stays free: AGPL, no paid tier, nothing held back for sponsors. If it replaced a
-paid tracker for you and you'd like to chip in, there's a coffee button below. A star, a bug report
-or a pull request helps just as much.
-
-<a href="https://buymeacoffee.com/duartesantos" target="_blank">
-  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60" width="217">
-</a>
-
-[![Star History Chart](https://api.star-history.com/svg?repos=duartesantos8/opengym&type=Date)](https://star-history.com/#DuarteSantos8/openGym&Date)
-
-## License
-
-**openGym's own code** is licensed under the [GNU AGPL v3.0](LICENSE). You can self-host, use,
-modify and share it; if you run a modified version as a network service, you have to offer that
-version's source under the same license.
+### Mídia dos exercícios
 
 > [!IMPORTANT]
-> **The exercise media is not covered by that license.** Exercise metadata and instruction text come
-> from [ExerciseDB v1](https://exercisedb.dev/) through
-> [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset) under MIT. The
-> images and animations are third-party content under neither MIT nor the AGPL, and their ownership
-> is disputed: the dataset attributes them to [Gym visual](https://gymvisual.com/), while
-> [ExerciseDB/AscendAPI](https://exercisedb.io/faq) claims to own them. openGym doesn't redistribute
-> them (your instance downloads them on first start) and doesn't relicense them. To reuse that
-> media, clear it with the rights holder first.
+> **A mídia dos exercícios não entra nessa licença.** Metadados e textos de instrução vêm do [ExerciseDB v1](https://exercisedb.dev/) via [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset), sob MIT. Imagens e animações são conteúdo de terceiro, nem MIT nem AGPL, com titularidade disputada entre [Gym visual](https://gymvisual.com/) e [ExerciseDB/AscendAPI](https://exercisedb.io/faq). Esta cópia não redistribui essa mídia (a instância baixa na primeira subida) e não a relicencia. Para reutilizá-la, resolva a licença com o titular.
 
-Full third-party notices, including the body-diagram geometry, are in [NOTICE.md](NOTICE.md).
+Os avisos completos, inclusive a geometria do diagrama corporal (MuscleMap, MIT), o renderizador de QR (`lean-qr`, MIT) e as traduções para português, estão em [NOTICE.md](NOTICE.md). Esse arquivo é mantido junto com o código; não apague os textos de licença de terceiro ao atualizar a marca.
+
+### English
+
+Center Gym is a modified deployment of [openGym](https://github.com/DuarteSantos8/openGym) (Copyright © 2026 Duarte Santos). Modifications in this repository, dated 2026-10-06, are the gym's name, logo, icons and black-and-white palette in `frontend/brand.json`, plus docs that separate this deployment from upstream. The program is licensed under the GNU Affero General Public License v3.0 or later ([LICENSE](LICENSE)). Third-party notices, including MIT texts that must be preserved, are in [NOTICE.md](NOTICE.md). Upstream badges, the author's demo, Discord and published container images are not this project. Build from this source (`docker compose up -d --build`); do not present upstream images or the upstream APK as Center Gym.
