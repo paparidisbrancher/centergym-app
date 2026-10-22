@@ -10,3 +10,6 @@ Para outra academia, altere brand.json e coloque seus arquivos em frontend/publi
 Execute npm run build em frontend e publique a implantação correspondente.
 Isso configura uma academia por implantação; não seleciona academias por conta
 nem implementa isolamento de dados entre academias no backend.
+
+Para trazer correções do openGym sem reverter essa identidade, siga
+[docs/UPSTREAM.md](UPSTREAM.md).
