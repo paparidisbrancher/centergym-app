@@ -52,29 +52,25 @@ cd mcp && npm test
 
 ## Using AI tools
 
-openGym itself is developed with Claude Code (see
-[How openGym is built](README.md#how-opengym-is-built)), and [`CLAUDE.md`](CLAUDE.md) holds the
+Upstream openGym is developed with Claude Code, and [`CLAUDE.md`](CLAUDE.md) holds the
 project context for it. You're welcome to use whatever tools you like for a pull request. The bar
 is the same either way: you understand the change, it's tested, and you can answer questions about
 it in review.
 
 ## What CI does with your pull request
 
-<p align="center">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/ci-dark.png">
-  <img src="docs/diagrams/ci.png" alt="CI path: pull request on GitHub, GitHub Actions tests and image builds, review and merge into main, mirror workflow pushes to GitLab, GitLab CI builds the signed APK, images and SBOMs, GHCR images on release." width="280">
-</picture>
-</p>
+This deployment runs one GitHub Actions workflow, [`.github/workflows/pages.yml`](.github/workflows/pages.yml).
+A push to `main` that changes `frontend/` (or a manual run) builds the browser demo with
+`VITE_DEMO=1` on Node 22 and publishes it to GitHub Pages. That is the preview the owner
+configured. The workflow does not run the test suites, build container images, or sign an APK.
 
-A pull request runs the three test suites and builds and boots both api image targets. The APK and
-the published images come from GitLab CI on the mirror, built from `main` after the merge. If your
-change needs an APK to be judged, say so in the pull request and a maintainer will run that build.
-A first-time contributor's workflows wait for a maintainer to approve them, so "no checks yet"
-just means nobody has pressed the button.
+[Dependabot](.github/dependabot.yml) is the only dependency bot. It opens grouped monthly
+pull requests. Renovate is not used.
 
-Merge requests still open on the GitLab mirror are reviewed too and land on `main` here. New work
-should come as a GitHub pull request.
+The test suites are local: `cd frontend && npm test`, `cd api && npm test`, `cd mcp && npm test`.
+Upstream openGym documents a GitHub-and-GitLab pipeline that publishes a signed APK and
+container images. That pipeline is not this repository. Do not send Center Gym changes to
+the openGym remotes.
 
 ## Good first issues
 
@@ -86,14 +82,19 @@ should come as a GitHub pull request.
 
 ## Where to ask what
 
+Bugs and changes for this Center Gym deployment go to
+[this repository](https://github.com/paparidisbrancher/centergym-app/issues).
+The channels below belong to upstream openGym. They are not this gym's support, and a
+pull request that includes the Center Gym brand does not belong on that repository.
+
 | You have | Goes to |
 | --- | --- |
-| A quick question, or you'd rather chat | [Discord](https://discord.gg/e62jY6fwVb) |
-| A question, or self-hosting that won't behave | [Discussions → Q&A](https://github.com/DuarteSantos8/openGym/discussions/categories/q-a) |
-| An idea you're not sure about yet | [Discussions → Ideas](https://github.com/DuarteSantos8/openGym/discussions/categories/ideas) |
-| A reproducible bug | [Issues](https://github.com/DuarteSantos8/openGym/issues) |
-| A change you've already built | [A pull request](https://github.com/DuarteSantos8/openGym/pulls) |
-| A security problem | [Private report](https://github.com/DuarteSantos8/openGym/security/advisories/new), see [SECURITY.md](SECURITY.md) |
+| A quick question about upstream openGym | [Discord](https://discord.gg/e62jY6fwVb) |
+| An upstream question the next person should find | [Discussions → Q&A](https://github.com/DuarteSantos8/openGym/discussions/categories/q-a) |
+| An idea for upstream | [Discussions → Ideas](https://github.com/DuarteSantos8/openGym/discussions/categories/ideas) |
+| A bug in upstream, reproduced without this branding | [openGym issues](https://github.com/DuarteSantos8/openGym/issues) |
+| A change for upstream, with no Center Gym files | [openGym pull requests](https://github.com/DuarteSantos8/openGym/pulls) |
+| A security problem in the inherited code | [Private report](https://github.com/DuarteSantos8/openGym/security/advisories/new), see [SECURITY.md](SECURITY.md) |
 
 An answered question in Discussions is worth more than the same answer in a chat log, because the
 next person searching "passkey login fails behind my reverse proxy" finds it. If a Discord answer

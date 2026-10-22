@@ -1,6 +1,7 @@
-# Dependency updates, deliberately quiet.
+# Dependency updates for this Center Gym deployment. Dependabot is the only bot.
+# Renovate ran from upstream GitLab CI and is not used here.
 #
-# openGym is dependency-light on purpose: the frontend is React + Router + Zustand, and api/
+# The app is dependency-light on purpose: the frontend is React + Router + Zustand, and api/
 # has two runtime dependencies. A default Dependabot setup would still open a PR per package
 # per week, which on a solo project means the alerts stop being read — the opposite of what
 # this is for. So: monthly, everything in an ecosystem grouped into a single PR, and a low
@@ -94,9 +95,9 @@ updates:
       actions:
         patterns: ['*']
         update-types: ['minor', 'patch']
-      # Action majors are usually a runner or Node-version change and usually harmless — but
-      # these workflows publish the ghcr images and deploy the live demo, so the blast radius
-      # is real. Separate PR, so a failure has an obvious cause.
+      # Action majors are usually a runner or Node-version change. The only workflow in this
+      # repository publishes the GitHub Pages preview, so a broken action fails that deploy.
+      # Separate PR, so a failure has an obvious cause.
       actions-major:
         patterns: ['*']
         update-types: ['major']

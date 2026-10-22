@@ -174,7 +174,12 @@ accounts, no store rules, no yearly fees between you and an open-source app.
 
 ### Android — sideload the APK
 
-The official signed APK is in four places, all the same file:
+> **Center Gym does not publish this APK.** The files below are upstream openGym, with that
+> project's branding. The `build:apk` and `build:ios` jobs lived in upstream `.gitlab-ci.yml`,
+> which is not in this repository. A Center Gym binary is a local Capacitor build from this
+> tree. Do not redistribute the upstream APK under the Center Gym name.
+
+The official signed APK of **upstream openGym** is in four places, all the same file:
 
 - **[opengym.duarte-santos.ch](https://opengym.duarte-santos.ch)** — the download page.
 - **[GitLab's package registry](https://gitlab.com/DuarteSantos8/opengym/-/packages)** — every
@@ -188,7 +193,7 @@ The official signed APK is in four places, all the same file:
 Android asks you to allow installs from the browser the first time — that's standard for any
 app outside the Play Store. Check the `.sha256` if you got the file from anywhere else.
 
-Both come out of CI: the `build:apk` job in [`.gitlab-ci.yml`](../.gitlab-ci.yml) runs
+Both come out of upstream CI: the `build:apk` job in upstream `.gitlab-ci.yml` (not in this repository) runs
 `npm run build:mobile` and `./gradlew assembleRelease`, then `zipalign`s and signs the result
 with the release key. The job runs on every push to `main` too, so the newest unreleased
 build is always one click away (signed with the same key, installs over a release):
@@ -230,7 +235,7 @@ that would simply install. Your free options:
   onto your own iPhone. Apple expires the signature after 7 days; re-run from Xcode to renew.
 - **AltStore:** automates that 7-day re-signing over Wi-Fi via a Mac companion app.
 
-There is a `build:ios` job in [`.gitlab-ci.yml`](../.gitlab-ci.yml) for exactly that path: the
+Upstream openGym has a `build:ios` job in its `.gitlab-ci.yml` (not in this repository) for exactly that path: the
 same mobile bundle, `xcodebuild archive` without a signing identity, and an *unsigned* `.ipa`
 (plus `.sha256`) as job artifact — on a tag also under `opengym-ios/<version>/` in the package
 registry — for AltStore/Sideloadly users to sign with their own Apple ID. It needs a Mac: Xcode
