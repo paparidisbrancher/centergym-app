@@ -55,13 +55,13 @@ cd frontend && npm run build:mobile   # + cap sync, points media at the CDN data
 There is no linter/formatter configured (no ESLint/Prettier config in the repo) and no
 TypeScript — match the existing style by hand.
 
-GitHub (`github.com/DuarteSantos8/openGym`) is the home of the project; `.github/workflows/mirror.yml`
-pushes `main` and `v*` tags to the GitLab mirror. Pull requests are gated by
-`.github/workflows/test.yml` on Node 22 — the same version as `web/Dockerfile` / `api/Dockerfile`
-(`node:22-alpine`): the frontend, api and MCP suites, the locale checks, and building and booting
-both api image targets. GitLab CI on the mirror (`.gitlab-ci.yml`) builds the release artifacts:
-the signed Android APK, the multi-arch images and the SBOMs. Never push or merge on GitLab
-directly; the mirror is fast-forward only.
+This tree is the Center Gym deployment, not the openGym upstream repository. The only
+GitHub Actions workflow is `.github/workflows/pages.yml`: on Node 22 (the same major as
+`web/Dockerfile` and `api/Dockerfile`, `node:22-alpine`) it builds the browser demo and
+publishes it to GitHub Pages. It does not run the test suites or produce images. Dependabot
+(`.github/dependabot.yml`) is the only dependency bot. Upstream openGym still builds its
+signed APK, multi-arch images and SBOMs on its own GitLab mirror; that pipeline is not in
+this tree. Do not push this fork to the openGym remotes.
 
 ## Architecture
 
