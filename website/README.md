@@ -1,4 +1,4 @@
-# opengym.duarte-santos.ch
+# opengym.ch
 
 Source of the project website — plain hand-written HTML/CSS/JS, no build step,
 served by nginx.
@@ -12,12 +12,12 @@ Not in this folder (added at deploy time):
   icons the PWA uses, so the browser tab, home screen and app all match)
 - `openGym.apk` — the signed release build (see `../docs/MOBILE.md`)
 - `demo/` — the browser-only demo build of the app, embedded in the `#demo` section and
-  reachable on its own at `/demo/`. Built from `../frontend` with `VITE_DEMO=1` and the
-  jsDelivr media bases. This repository builds that demo in
-  `../.github/workflows/pages.yml` (`VITE_DEMO=1`) and publishes `frontend/dist` to
-  GitHub Pages. Upstream openGym embedded the same build from a `pages` job in
-  `.gitlab-ci.yml`; this fork does not run that pipeline, so the ~140 MB
-  of exercise media stays out of it. It has to live on this host: the site frames it, and
+  reachable on its own at `/demo/`. Built from `../frontend` with `VITE_DEMO=1`, with the
+  180 px exercise media from `../catalogue/media` staged into `demo/exercise-media/` by
+  `../scripts/catalogue/stage-media.mjs`. This repository does that in
+  `../.github/workflows/pages.yml` and publishes `frontend/dist` to GitHub Pages.
+  It does not run the upstream GitLab `pages` job. Never put larger media here
+  (see `../catalogue/media/NOTICE.md`). It has to live on this host: the site frames it, and
   `X-Frame-Options: SAMEORIGIN` would block it from anywhere else.
 
 Every page has the same top bar. Pages with a table of contents (home, docs, about, API)

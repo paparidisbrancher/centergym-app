@@ -78,9 +78,13 @@ cd ../api && npm test
 
 A suíte de idioma (`frontend/src/lib/default-lang.test.js`,
 `frontend/src/store/useStore.default-lang.test.jsx` e um caso em
-`useStore.restore.test.jsx`) ainda espera o fallback do upstream: idioma do navegador
-e, por último, inglês. Nesta cópia o padrão é `pt-BR`, então esses testes falham antes
-de qualquer sync. Não reverta `autoLang` só para a suíte ficar verde.
+`useStore.restore.test.jsx`) espera `pt-BR` quando `DEFAULT_LANG` não nomeia um idioma
+desta cópia. Um sync que reponha o fallback do upstream (navegador, depois inglês)
+quebra esses testes. Não reverta `autoLang` só para a suíte ficar verde.
+
+As fixtures do coach em `api/test/helpers.mjs` datam a sessão de exemplo em relação a
+hoje. A janela de revisão é de 12 semanas; uma data fixa antiga faz o review voltar
+`nochange`. Mantenha a data relativa.
 
 Suba a instância com `docker compose up -d --build`. As linhas `image:` do Compose
 apontam para `ghcr.io/duartesantos8/opengym-*`, que são o openGym sem esta marca.
@@ -93,5 +97,6 @@ terceiro em `NOTICE.md` faz parte do sync. O aviso de obra modificada no topo do
 ## O que não trazer de volta
 
 - Badges, a demo e o Discord de `opengym.duarte-santos.ch` como canais desta academia.
-- `.gitlab-ci.yml`, `.gitea/` e `renovate.json`. Esta cópia usa GitHub Actions só para a prévia e Dependabot para dependências. O upstream, em outubro de 2026, também publicou atualizações de segurança de dependência (Capacitor 7.6.9 entre elas); um merge vai conflitar em `package.json` / lockfile com bumps feitos aqui. Resolva a versão, não reintroduza o pipeline.
-- A mídia dos exercícios. Continua fora do git; a instância baixa na primeira subida. Ver `NOTICE.md`.
+- `.gitlab-ci.yml`, `.gitea/`, `renovate.json` e o `test.yml` completo do upstream (imagens, APK, SBOM). Esta cópia usa GitHub Actions para a prévia (`pages.yml`) e, à parte, a suíte de frontend e API. Dependabot continua o único bot de dependência. Não traga `.github/workflows/cla.yml` nem `cla-issue.yml`: eles comentam em todo pull request e apontam para o CLA do openGym.
+- `catalogue.yml` só valida o catálogo de exercícios (leitura). Pode ficar.
+- A mídia grande dos exercícios continua fora do git. Desde o v1.4 o upstream versiona os stills e clipes de 180 px em `catalogue/media` (licença no `NOTICE.md` de lá). Esse diretório entra no sync e o `pages.yml` copia-o para a prévia com `scripts/catalogue/stage-media.mjs`. Não apague `catalogue/media` para "deixar a mídia de fora", e não volte a apontar a prévia para o dataset antigo no jsDelivr.

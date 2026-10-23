@@ -6,8 +6,9 @@
 // language picked in Settings since. Copies older than it carry no mark and are left exactly as
 // they are — including every existing profile whose `lang` is the old default.
 //
-// For a marked copy, the instance's DEFAULT_LANG (GET /api/config `default_lang`) comes first,
-// then the first of the browser's languages this app speaks, then English.
+// For a marked copy, the instance's DEFAULT_LANG (GET /api/config `default_lang`) comes first.
+// Center Gym then stays in Portuguese: the browser language is not consulted, and English is
+// not the fallback. A profile that already chose a language is left alone.
 //
 // That answer is worked out where the language is used (effectiveLang) and never written back
 // into the state. It depends on the device — two phones of one profile can have browsers in two
@@ -26,6 +27,9 @@ export function matchLocale(tag) {
   const exact = KEYS.find(k => k.toLowerCase() === want)
   if (exact) return exact
   const base = want.split('-')[0]
+  // Traditional Chinese arrives as zh-Hant(-TW), zh-HK or zh-MO, never as the pack's own 'zh-TW';
+  // the bare base would read it as Simplified.
+  if (base === 'zh' && KEYS.includes('zh-TW') && /^zh-(hant|hk|mo)(-|$)/.test(want)) return 'zh-TW'
   return KEYS.includes(base) ? base : null
 }
 
