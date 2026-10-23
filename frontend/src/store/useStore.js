@@ -193,7 +193,7 @@ const detectedLang = () => {
 }
 
 // A copy started from nothing on this device. `langAuto` marks its language as one nobody has
-// picked yet, so the instance's DEFAULT_LANG or the browser's language may set it
+// picked yet, so the instance's DEFAULT_LANG may set it, otherwise Portuguese stays,
 // (lib/default-lang.js, #303); picking one in Settings clears it. DEF does not carry the mark:
 // merged under a saved copy it would claim that every existing profile never chose.
 export function freshState() {
