@@ -1,5 +1,6 @@
-// #303: an instance-wide default language, and the browser's, apply only to a copy nobody has
-// picked a language for — never to an existing profile, whose `lang: 'en'` may be a choice.
+// #303, Center Gym: DEFAULT_LANG applies only to a copy nobody has picked a language for.
+// With no instance default, that copy is Portuguese, not the browser's language. An existing
+// profile, whose `lang: 'en'` may be a choice, is left alone.
 import { describe, expect, it } from 'vitest'
 import { matchLocale, autoLang } from './default-lang.js'
 
@@ -25,10 +26,11 @@ describe('autoLang', () => {
     expect(autoLang({ lang: 'en' }, { default_lang: 'pt-BR' }, ['de-DE'])).toBe(null)
     expect(autoLang({ lang: 'en', langAuto: false }, { default_lang: 'pt-BR' }, ['de-DE'])).toBe(null)
   })
-  it('puts DEFAULT_LANG before the browser, the browser before English', () => {
+  it('puts DEFAULT_LANG first, then Portuguese, and does not follow the browser', () => {
     expect(autoLang(fresh, { default_lang: 'pt-BR' }, ['de-DE'])).toBe('pt-BR')
-    expect(autoLang(fresh, {}, ['nl-NL', 'de-DE'])).toBe('de')
-    expect(autoLang(fresh, {}, ['nl-NL'])).toBe('en')
-    expect(autoLang(fresh, { default_lang: 'xx' }, ['fr-FR'])).toBe('fr')
+    expect(autoLang(fresh, { default_lang: 'de' }, ['en-US'])).toBe('de')
+    expect(autoLang(fresh, {}, ['nl-NL', 'de-DE'])).toBe('pt-BR')
+    expect(autoLang(fresh, {}, ['nl-NL'])).toBe('pt-BR')
+    expect(autoLang(fresh, { default_lang: 'xx' }, ['fr-FR'])).toBe('pt-BR')
   })
 })
