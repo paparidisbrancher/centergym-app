@@ -3,9 +3,9 @@
 // and a profile created from it — and nothing else. A copy saved before the mark existed keeps
 // its language even when that is the old default, 'en': it may well have been chosen.
 //
-// The language worked out for such a copy is the device's own and is never written into the
-// synced state: two devices with browsers in different languages would otherwise push their
-// answers over each other on every sync round.
+// The language worked out for such a copy is shown on this device and is never written into
+// the synced state. Center Gym shows Portuguese unless DEFAULT_LANG or a saved choice says
+// otherwise, so two devices do not push a browser language over each other.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('../lib/api.js', () => ({ api: vi.fn() }))
@@ -31,7 +31,7 @@ describe('instance default language', () => {
 
   it('a fresh copy is shown in DEFAULT_LANG once the config is in, and its state is left alone', async () => {
     useStore.setState({ S: freshState() })
-    expect(shown()).toBe('en')   // nothing to go on before the config
+    expect(shown()).toBe('pt-BR')   // stored default until the instance config arrives
     const before = clone(useStore.getState().S)
 
     api.mockResolvedValueOnce({ invite_only: false, allow_guest: true, default_lang: 'pt-BR' })
@@ -46,17 +46,17 @@ describe('instance default language', () => {
     await useStore.getState().refreshConfig()
     useStore.setState({ S: freshState(), config: null })
     expect(shown()).toBe('pt-BR')   // not the browser's German first
-    // An instance known to have none: the browser's language at once.
+    // An instance known to have no DEFAULT_LANG still shows Portuguese, not the browser's German.
     api.mockResolvedValueOnce({ invite_only: false })
     await useStore.getState().refreshConfig()
     useStore.setState({ config: null })
-    expect(shown()).toBe('de')
+    expect(shown()).toBe('pt-BR')
   })
 
-  it('without DEFAULT_LANG a fresh copy follows the browser when the app speaks it', () => {
+  it('without DEFAULT_LANG a fresh copy stays in Portuguese instead of following the browser', () => {
     nav(['de-DE', 'en'])
     useStore.setState({ S: freshState(), config: { invite_only: false, allow_guest: true } })
-    expect(shown()).toBe('de')
+    expect(shown()).toBe('pt-BR')
   })
 
   it('an existing copy with lang "en" and no mark is left in English', () => {
@@ -75,11 +75,13 @@ describe('instance default language', () => {
 
   it('two devices with browsers in different languages do not push the profile back and forth', async () => {
     // Device B's browser is English; the server copy was last written from device A (German).
+    // Both devices display Portuguese. That display language is not written back, so they
+    // do not push the profile over each other.
     nav(['en-US'])
     const server = { ...clone(DEF), _ts: 100, lang: 'de', langAuto: true, workouts: [{ id: 'w1', d: '2026-09-01', start: 1, entries: [] }] }
     useStore.setState({ S: clone(server), user: { id: 'u1' }, ready: true, config: { invite_only: false } })
     localStorage.setItem('gym_sync', JSON.stringify({ rev: 5, ts: 100 }))
-    expect(shown()).toBe('en')
+    expect(shown()).toBe('pt-BR')
     expect(useStore.getState().S.lang).toBe('de')
 
     // The next poll: the server has not moved, and this device owes it nothing.
@@ -88,6 +90,6 @@ describe('instance default language', () => {
     await useStore.getState().pullState()
     expect(puts()).toHaveLength(0)
     expect(useStore.getState().S.lang).toBe('de')
-    expect(shown()).toBe('en')
+    expect(shown()).toBe('pt-BR')
   })
 })
