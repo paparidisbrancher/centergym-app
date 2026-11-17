@@ -39,8 +39,7 @@ const PRIVACY = [
   ]],
   ['Onde ficam e por quanto tempo', [
     'Os dados ficam em servidor contratado pela academia, com conexão criptografada (HTTPS) e cópias de segurança. Parte deles também fica no seu aparelho, para o aplicativo funcionar sem internet.',
-    'Guardamos os dados enquanto a sua conta estiver ativa. Encerrada a matrícula, a conta é desativada e os dados são apagados em até 90 dias, salvo quando a lei exigir guardá-los por mais tempo.',
-    'As imagens e animações dos exercícios podem ser carregadas de um servidor de terceiros; nesse caso ele recebe o endereço de internet do seu aparelho, como em qualquer site, mas nenhum dado da sua conta.'
+    'Guardamos os dados enquanto a sua conta estiver ativa. Encerrada a matrícula, a conta é desativada e os dados são apagados em até 90 dias, salvo quando a lei exigir guardá-los por mais tempo.'
   ]],
   ['Seus direitos', [
     'Você pode, a qualquer momento: confirmar se tratamos seus dados e acessá-los; corrigi-los; levá-los com você (Configurações → Exportar backup); pedir a exclusão da conta e dos dados; retirar o consentimento para dados de saúde; e saber com quem foram compartilhados.',
