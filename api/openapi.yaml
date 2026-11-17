@@ -2265,6 +2265,93 @@ paths:
               schema: { $ref: '#/components/schemas/Error' }
               example: { error: "no such user" }
 
+  /api/admin/user/trainer:
+    post:
+      tags: [admin]
+      operationId: adminUserTrainer
+      summary: 'Admin: mark or unmark a profile as a trainer'
+      description: |
+        Center Gym. Sets the `trainer` flag. Every admin is a trainer already. Audited.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id: { type: string }
+                trainer: { type: boolean }
+      responses:
+        '200': { description: OK. }
+        '401': { description: Not signed in. }
+  /api/trainer/students:
+    get:
+      tags: [data]
+      operationId: trainerStudents
+      summary: 'Trainer: list the students'
+      description: |
+        Center Gym. Every enabled profile but the caller, with workout count, last workout, routine count and whether a sent plan is still waiting. 403 for a profile that is not a trainer.
+      responses:
+        '200': { description: OK. }
+        '401': { description: Not signed in. }
+  /api/trainer/student:
+    get:
+      tags: [data]
+      operationId: trainerStudent
+      summary: 'Trainer: one student'
+      description: |
+        Center Gym. Routines and the last twelve workouts of `?id=`. No body weight, no media.
+      responses:
+        '200': { description: OK. }
+        '401': { description: Not signed in. }
+  /api/trainer/plan:
+    post:
+      tags: [data]
+      operationId: trainerPlanSend
+      summary: 'Trainer: send a plan to a student'
+      description: |
+        Center Gym. Stores a plan bundle (the plan-share file format) in the inbox of the student, replacing one not yet accepted. 413 above 200 KB. Audited.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id: { type: string }
+                plan: { type: object }
+                note: { type: string }
+      responses:
+        '200': { description: OK. }
+        '401': { description: Not signed in. }
+  /api/plan-inbox:
+    get:
+      tags: [data]
+      operationId: planInbox
+      summary: 'The plan a trainer sent me, if any'
+      description: |
+        Center Gym. `pending` is null or `{ from, fromName, ts, note, plan }`.
+      responses:
+        '200': { description: OK. }
+        '401': { description: Not signed in. }
+  /api/plan-inbox/done:
+    post:
+      tags: [data]
+      operationId: planInboxDone
+      summary: 'Clear my plan inbox'
+      description: |
+        Center Gym. Called after the plan was imported or dismissed. `ts` guards against clearing a newer one.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ts: { type: number }
+      responses:
+        '200': { description: OK. }
+        '401': { description: Not signed in. }
   /api/admin/invites:
     get:
       tags: [admin]

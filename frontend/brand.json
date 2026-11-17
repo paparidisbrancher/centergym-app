@@ -7,6 +7,15 @@
   "logoBackground": "#141412",
   "icon": "icon-180.png",
   "largeIcon": "icon-512.png",
+  "legal": {
+    "company": "[Razão social da academia]",
+    "cnpj": "[CNPJ]",
+    "address": "[Endereço da academia]",
+    "city": "[Cidade – UF]",
+    "email": "[e-mail de contato]",
+    "operator": "Nacci Labs",
+    "updated": "2026-11-16"
+  },
   "themes": {
     "dark": {
       "background": "#141412",

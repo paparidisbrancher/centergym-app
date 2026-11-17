@@ -147,6 +147,13 @@ db.subs = db.subs || [];
 db.invites = db.invites || [];
 db.deviceLinks = db.deviceLinks || [];   // unused one-time device links, hashed (device-link.js)
 const isAdmin = user => !!user && (user.admin === true || ADMIN_UIDS.includes(user.id));
+// Center Gym: o professor da academia. Um admin marca o perfil (POST /api/admin/user/trainer);
+// todo admin também é professor. Treinos enviados esperam em db.plans até o aluno aceitar.
+db.plans = db.plans || {};
+const isTrainer = user => !!user && (user.trainer === true || isAdmin(user));
+// Só quando é professor: quem não é recebe o mesmo objeto de usuário de antes.
+const trainerFlag = user => (isTrainer(user) ? { trainer: true } : {});
+const PLAN_MAX_BYTES = 200 * 1024;
 // 0600: db.json holds passkey credential material. It used to be covered by a blanket 0700 on
 // the whole directory; now that the directory stays traversable, the file carries its own mode.
 // Once the new version is on disk, a second copy of it goes to db.json.bak, the same durable
@@ -619,6 +626,12 @@ function requireAdmin(req, res) {
   // Only the 403 is recorded: a 401 is any unauthenticated bot poking /api/admin/*, and
   // logging those would bury the events an operator actually wants to see.
   if (!isAdmin(user)) { audit(req, 'admin.denied', { ok: false, user }); json(res, 403, { error: 'forbidden' }); return null; }
+  return user;
+}
+function requireTrainer(req, res) {
+  const user = readSession(req);
+  if (!user) { json(res, 401, { error: 'not signed in' }); return null; }
+  if (!isTrainer(user)) { json(res, 403, { error: 'forbidden' }); return null; }
   return user;
 }
 const expireCookie = name => `${name}=; Path=/; Max-Age=0; HttpOnly;${SECURE} SameSite=Lax`;
@@ -1094,7 +1107,7 @@ function loginTarget(body) {
 }
 const acctKey = u => 'acct:' + u.id;
 const passkeyCount = u => db.creds.filter(c => c.userId === u.id).length;
-const publicUser = u => ({ id: u.id, name: u.name, admin: isAdmin(u) });
+const publicUser = u => ({ id: u.id, name: u.name, admin: isAdmin(u), ...trainerFlag(u) });
 const POLICY_ERRORS = {
   'too-short': `the password needs at least ${MIN_LENGTH} characters`,
   'too-long': `the password can have at most ${MAX_LENGTH} characters`,
@@ -1957,7 +1970,7 @@ const routes = {
     if (!s) return json(res, 401, { error: 'not signed in' });
     const { user } = s;
     const renew = s.bearer && s.exp - Date.now() < SESSION_DAYS * 86400000 / 2;
-    json(res, 200, { user: { id: user.id, name: user.name, admin: isAdmin(user) }, ...(renew ? { token: makeSession(user) } : {}) });
+    json(res, 200, { user: { id: user.id, name: user.name, admin: isAdmin(user), ...trainerFlag(user) }, ...(renew ? { token: makeSession(user) } : {}) });
   },
 
   'POST /api/register/options': async (req, res) => {
@@ -2035,7 +2048,7 @@ const routes = {
     });
     saveDb();
     audit(req, 'auth.register.ok', { user, msg: invite ? invite.code : null });
-    json(res, 200, { user: { id: user.id, name: user.name, admin: isAdmin(user) } }, { 'Set-Cookie': sessionCookie(user) });
+    json(res, 200, { user: { id: user.id, name: user.name, admin: isAdmin(user), ...trainerFlag(user) } }, { 'Set-Cookie': sessionCookie(user) });
   },
 
   'POST /api/login/options': async (req, res) => {
@@ -2097,7 +2110,7 @@ const routes = {
       return json(res, 403, { error: 'this account has been disabled', code: 'disabled' });
     }
     audit(req, 'auth.login.ok', { user });
-    json(res, 200, { user: { id: user.id, name: user.name, admin: isAdmin(user) } }, { 'Set-Cookie': sessionCookie(user) });
+    json(res, 200, { user: { id: user.id, name: user.name, admin: isAdmin(user), ...trainerFlag(user) } }, { 'Set-Cookie': sessionCookie(user) });
   },
 
   // Reads the session purely so the sign-out can be recorded; the cookie is cleared either way.
@@ -2156,7 +2169,7 @@ const routes = {
       return json(res, 400, { error: 'invalid or expired code', code: 'pair-invalid' });
     }
     audit(req, 'auth.pair.ok', { user });
-    json(res, 200, { token: makeSession(user), user: { id: user.id, name: user.name, admin: isAdmin(user) } });
+    json(res, 200, { token: makeSession(user), user: { id: user.id, name: user.name, admin: isAdmin(user), ...trainerFlag(user) } });
   },
 
   // Absent entirely while PASSWORD_LOGIN is off, so each of them is a plain 404.
@@ -2413,7 +2426,7 @@ const routes = {
       const last = workouts[workouts.length - 1];
       return {
         id: u.id, name: u.name, created: u.created || null,
-        disabled: !!u.disabled, admin: isAdmin(u), invitedBy: u.invitedBy || null,
+        disabled: !!u.disabled, admin: isAdmin(u), trainer: u.trainer === true, invitedBy: u.invitedBy || null,
         workouts: workouts.length,
         lastWorkout: last ? last.d : null,
         lastSync: lastSyncOf(u, S),
@@ -2436,7 +2449,7 @@ const routes = {
     const S = readState(u.id) || {};
     json(res, 200, {
       user: {
-        id: u.id, name: u.name, created: u.created || null, disabled: !!u.disabled, admin: isAdmin(u), invitedBy: u.invitedBy || null,
+        id: u.id, name: u.name, created: u.created || null, disabled: !!u.disabled, admin: isAdmin(u), trainer: u.trainer === true, invitedBy: u.invitedBy || null,
         // Only on an instance with password sign-in: whether they have one, and until when an
         // unused reset code is good.
         ...(PASSWORD_LOGIN ? { password: hasPassword(u), email: u.email || null, resetUntil: u.pwReset?.exp > Date.now() ? u.pwReset.exp : null } : {})
@@ -2484,6 +2497,7 @@ const routes = {
     db.creds = (db.creds || []).filter(c => c.userId !== u.id);
     db.subs = (db.subs || []).filter(x => x.userId !== u.id);
     dropDeviceLinks(db, u.id);
+    delete db.plans[u.id];
     presence.delete(u.id);
     // The training history and any Coach credential of theirs, both outside db.json.
     try { fs.unlinkSync(stateFile(u.id)); } catch { /* already gone */ }
@@ -2494,6 +2508,84 @@ const routes = {
     // Logged with the name, because the id is about to mean nothing to anyone reading this back.
     audit(req, 'admin.user.delete', { user: admin, msg: name });
     json(res, 200, { ok: true, id: u.id });
+  },
+
+  /* ---------- Center Gym: professor ---------- */
+  // O professor não escreve no documento do aluno: esse documento é mesclado pelo aparelho do
+  // aluno (revisões, 409). O treino fica numa caixa de entrada e o app do aluno o incorpora com
+  // o mesmo caminho de "importar plano" (frontend/src/lib/plan-share.js).
+  'POST /api/admin/user/trainer': async (req, res) => {
+    const admin = requireAdmin(req, res); if (!admin) return;
+    const body = await readBody(req);
+    const u = db.users.find(x => x.id === body.id);
+    if (!u) return json(res, 404, { error: 'no such user' });
+    if (body.trainer) u.trainer = true; else delete u.trainer;
+    saveDb();
+    audit(req, u.trainer ? 'admin.user.trainer.on' : 'admin.user.trainer.off', { user: admin, target: u });
+    json(res, 200, { ok: true, id: u.id, trainer: u.trainer === true });
+  },
+
+  'GET /api/trainer/students': async (req, res) => {
+    const me = requireTrainer(req, res); if (!me) return;
+    const students = db.users.filter(u => u.id !== me.id && !u.disabled).map(u => {
+      const S = readState(u.id) || {};
+      const workouts = records(S.workouts);
+      return {
+        id: u.id, name: u.name, workouts: workouts.length,
+        lastWorkout: workouts.length ? workouts[workouts.length - 1].d : null,
+        routines: records(S.routines).length,
+        pending: db.plans[u.id] ? db.plans[u.id].ts : null
+      };
+    });
+    json(res, 200, { students });
+  },
+
+  // O que o professor vê de um aluno: fichas e treinos recentes. Peso corporal, fotos e vídeos
+  // ficam de fora — são do aluno.
+  'GET /api/trainer/student': async (req, res) => {
+    const me = requireTrainer(req, res); if (!me) return;
+    const id = new URL(req.url, 'http://x').searchParams.get('id');
+    const u = db.users.find(x => x.id === id && !x.disabled);
+    if (!u) return json(res, 404, { error: 'no such user' });
+    const S = readState(u.id) || {};
+    json(res, 200, {
+      student: { id: u.id, name: u.name },
+      routines: records(S.routines).map(r => ({ id: r.id, name: r.name, emoji: r.emoji, count: records(r.ex).length })),
+      workouts: records(S.workouts).slice(-12).reverse().map(w => ({ id: w.id, d: w.d, name: w.name, start: w.start, end: w.end })),
+      pending: db.plans[u.id] ? db.plans[u.id].ts : null
+    });
+  },
+
+  'POST /api/trainer/plan': async (req, res) => {
+    const me = requireTrainer(req, res); if (!me) return;
+    const body = await readBody(req);
+    const u = db.users.find(x => x.id === body.id && !x.disabled);
+    if (!u) return json(res, 404, { error: 'no such user' });
+    const plan = body.plan;
+    if (!record(plan) || !plan.opengym_plan || !Array.isArray(plan.routines) || !plan.routines.length) return json(res, 400, { error: 'plan required' });
+    if (Buffer.byteLength(JSON.stringify(plan)) > PLAN_MAX_BYTES) return json(res, 413, { error: 'plan too large' });
+    // Um treino pendente por aluno: o mais novo substitui o que ainda não foi aceito.
+    db.plans[u.id] = { from: me.id, fromName: me.name, ts: Date.now(), note: String(body.note || '').slice(0, 500), plan };
+    saveDb();
+    audit(req, 'admin.plan.send', { user: me, target: u });
+    json(res, 200, { ok: true, id: u.id, ts: db.plans[u.id].ts });
+  },
+
+  'GET /api/plan-inbox': async (req, res) => {
+    const user = readSession(req);
+    if (!user) return json(res, 401, { error: 'not signed in' });
+    json(res, 200, { pending: db.plans[user.id] || null });
+  },
+
+  // Aceito ou dispensado, o treino sai da caixa. `ts` evita apagar um envio mais novo que chegou
+  // enquanto o aluno olhava o anterior.
+  'POST /api/plan-inbox/done': async (req, res) => {
+    const user = readSession(req);
+    if (!user) return json(res, 401, { error: 'not signed in' });
+    const body = await readBody(req);
+    const p = db.plans[user.id];
+    if (p && (body.ts == null || body.ts === p.ts)) { delete db.plans[user.id]; saveDb(); }
+    json(res, 200, { ok: true });
   },
 
   'GET /api/admin/invites': async (req, res) => {

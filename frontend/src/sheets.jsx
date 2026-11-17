@@ -2180,12 +2180,15 @@ function PlanTools({ close }) {
   </>
 }
 
-export const planImportSheet = bundle => ui().openSheet(close => <PlanImport bundle={bundle} close={close} />)
+// `opts` (Center Gym, treino enviado pelo professor): `schedule` liga a semana de saída e
+// `onDone` avisa que o plano foi adicionado, para a caixa de entrada ser limpa.
+export const planImportSheet = (bundle, opts) => ui().openSheet(close => <PlanImport bundle={bundle} close={close} opts={opts} />)
 
-function PlanImport({ bundle, close }) {
-  const [schedule, setSchedule] = useState(false)
+function PlanImport({ bundle, close, opts }) {
+  const [schedule, setSchedule] = useState(!!opts?.schedule && bundle.scheduledDays > 0)
   const apply = () => {
     update(s => mergePlan(s, bundle, { schedule }))
+    opts?.onDone?.()
     close()
     toast(tn('Added {0} routine to your plan', 'Added {0} routines to your plan', bundle.routineCount))
     nav('/plan')
