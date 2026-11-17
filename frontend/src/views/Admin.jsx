@@ -92,6 +92,7 @@ function UserDetail({ id, onChanged, close }) {
     <h3 className="capitalize">{u.name}</h3>
     <div className="row" style={{ gap: 6, flexWrap: 'wrap', margin: '8px 0 12px' }}>
       {u.admin && <span className="adm-pill acc">admin</span>}
+      {u.trainer && <span className="adm-pill acc">trainer</span>}
       {u.disabled && <span className="adm-pill bad">disabled</span>}
       {u.invitedBy && <span className="adm-pill">invite {u.invitedBy}</span>}
       {u.password && <span className="adm-pill">password</span>}
@@ -108,6 +109,11 @@ function UserDetail({ id, onChanged, close }) {
       <div className="tile"><div className="l">Last sync</div><div className="v" style={{ fontSize: '.95rem' }}>{rel(d.lastSync)}</div></div>
     </div>
     {!u.admin && <>
+      {/* Center Gym: o professor vê os alunos e envia fichas (views/Trainer.jsx). */}
+      <button className="btn" style={{ margin: '12px 0 4px' }} onClick={() => api('/api/admin/user/trainer', { method: 'POST', body: JSON.stringify({ id: u.id, trainer: !u.trainer }) })
+        .then(() => { toast(u.trainer ? 'No longer a trainer' : 'Now a trainer'); onChanged(); close() }).catch(e => toast(e.message))}>
+        {u.trainer ? 'Remove trainer role' : 'Make trainer'}</button>
+      <div className="adm-hint">A trainer sees every student's routines and recent workouts and can send them plans. Admins are trainers already.</div>
       <button className={'btn ' + (u.disabled ? 'primary' : 'danger')} style={{ margin: '12px 0 4px' }}
         onClick={() => u.disabled ? setDisabled(false)
           : confirmSheet({ title: 'Disable ' + u.name + '?', message: 'They are signed out everywhere and can no longer sync or log in until re-enabled. Their data stays.', confirmText: 'Disable', danger: true, onConfirm: () => setDisabled(true) })}>

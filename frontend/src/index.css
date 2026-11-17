@@ -312,6 +312,9 @@ h4.sec{
   display:flex;align-items:center;justify-content:center;
   background:var(--tint,var(--acc));color:#fff;
 }
+/* Sobre a cor de destaque o ícone usa --on-acc: com o destaque branco (Center Gym, tema escuro) o
+   branco fixo acima sumia. Pega o tom padrão (sem style) e quem passa var(--acc) como tint ou fundo. */
+.lrow-i:not([style]),.lrow-i[style*="var(--acc)"]{color:var(--on-acc)}
 /* The title column never shrinks below its own longest word. With a basis of 0 and min-width:0 it
    only got what a capped value left over, and on a 320px phone "Progression" (96px) was painted over
    by "Linear progression" in a 37px box; min-width:auto — the flex default — is exactly the floor

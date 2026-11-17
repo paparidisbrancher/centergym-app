@@ -12,6 +12,7 @@ import { Button, Segmented } from '../components/ui.jsx'
 import { askAddDeviceData } from '../sheets.jsx'
 import { passwordOn, PasswordRegisterForm, openPasswordSignIn } from '../components/PasswordAuth.jsx'
 import { openDeviceLinkRedeem } from '../components/Passkeys.jsx'
+import { LegalLinks } from './Legal.jsx'
 
 function RegisterSheet({ close }) {
   const { setUser, pushState, pullState, loadConfig } = useStore()
@@ -93,7 +94,8 @@ export default function Login() {
         Versão de demonstração com dados de exemplo: fichas de treino, treino guiado com timer de descanso, gráficos de evolução e peso corporal. Tudo fica só neste navegador.
       </div>
       <div className="dim small" style={{ marginTop: 22, lineHeight: 1.6 }}>
-        Baseado no <a href={REPO} target="_blank" rel="noopener">openGym</a> (código aberto, AGPL-3.0)
+        Baseado no <a href={REPO} target="_blank" rel="noopener">openGym</a> (código aberto, AGPL-3.0)<br />
+        <LegalLinks />
       </div>
     </div>
   )
@@ -126,7 +128,7 @@ export default function Login() {
         // so say that plainly instead of offering a local profile that cannot be created.
         : t("This browser doesn't support passkeys, and this instance requires an account. Try a browser or device with passkey support.")}</div>}
       {canGuest && <Button variant="ghost" className="dim" onClick={() => setGuest(true)}>{t('Continue without account')}</Button>}
-      <div className="dim small" style={{ marginTop: 26, lineHeight: 1.5 }}>{pwOn ? t('Passkeys use {0}. A password works too, where passkeys do not.', bio()) : t('Passkeys use {0}. No passwords to remember.', bio())}<br />{t('Each profile keeps its own plan, workouts & body weight.')}</div>
+      <div className="dim small" style={{ marginTop: 26, lineHeight: 1.5 }}>{pwOn ? t('Passkeys use {0}. A password works too, where passkeys do not.', bio()) : t('Passkeys use {0}. No passwords to remember.', bio())}<br />{t('Each profile keeps its own plan, workouts & body weight.')}<br />Ao criar um perfil você aceita os <LegalLinks /></div>
     </div>
   )
 }
